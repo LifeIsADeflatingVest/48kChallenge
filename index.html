@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+  </head>
+  <body>
+	<div style="text-align:center">
+		<canvas style="border: 2px solid black" id="canv1" width="256" height="192"></canvas>
+	</div>
+  </body>
+  <script>
+	var canvas = document.getElementById('canv1');
+	var ctx = canvas.getContext('2d');
+	var ball = new Image();
+	var basket = new Image();
+	var shoot = false;
+	var ballDown = true;
+	var yBall = 160;
+	var xBall = 70;
+	
+	function init() {
+		ball.src = 'ball.png';
+		basket.src = 'basket.png';
+		window.requestAnimationFrame(draw);
+	}
+	
+	function draw() {
+		var rnd1 = rnd2 = 1;
+		if (shoot) {
+			rnd1 = randomNumber(0.97, 1.03);
+			rnd2 = randomNumber(0.97, 1.03);
+		}
+		else {
+			if (ballDown) {
+				yBall++;
+				if (yBall >= 165) {
+					ballDown = false;
+				}
+			}
+			else {
+				yBall--;
+				if (yBall <= 120) {
+					ballDown = true;
+				}
+			}
+			if (xBall < 0) {
+				xBall = 0;
+			}
+			else if (xBall > 226) {
+				xBall = 226;
+			}
+		}
+		ctx.globalCompositeOperation = 'destination-over';
+		ctx.clearRect(0, 0, 256, 192); // clear canvas
+		
+		ctx.drawImage(basket, 116, 20);
+		ctx.drawImage(ball, xBall*rnd1, yBall*rnd2);
+
+		window.requestAnimationFrame(draw);
+	}
+
+	init();
+	
+	//
+	function randomNumber(min, max) {
+		return Math.random() * (max - min) + min;
+	}
+	
+	document.addEventListener("keypress", function onEvent(event) {
+		switch (event.key) {
+			case "o":
+				xBall=xBall-2;
+				break;
+			case "p":
+				xBall=xBall+2;
+				break;
+			case "Enter":
+				shoot = true;
+				break;
+		}
+	});
+	 document.addEventListener('keyup', (event) => {
+		const keyName = event.key;
+		alert('keyup event\n\n' + 'key: ' + keyName);
+	});
+
+  </script>
+</html>
