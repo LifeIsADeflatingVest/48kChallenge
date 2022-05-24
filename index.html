@@ -5,7 +5,7 @@
   </head>
   <body style="background:black">
 	<div style="text-align:center;margin-top:100px">
-		<canvas style="border: 2px solid black;transform:scale(1.5);background:#00eeee " id="canv1" width="256" height="192"></canvas>
+		<canvas style="border: 2px solid black;transform:scale(1.5);background:#00eeee" id="canv1" width="256" height="192"></canvas>
 	</div>
   </body>
   <script>
@@ -32,6 +32,7 @@
 	var countdown;
 	var randDir, yFactor;
 	var gameBegun = false;
+	var colorScheme = "#00eeee";
 	
 	function init() {
 		window.requestAnimationFrame(draw);
@@ -179,7 +180,7 @@
 		ctx.quadraticCurveTo(xBall*rnd1, yBall*rnd2-5, xBall*rnd1, yBall*rnd2);
 		ctx.moveTo(xBall*rnd1, yBall*rnd2);
 		ctx.quadraticCurveTo(xBall*rnd1, yBall*rnd2+5, xBall*rnd1-sizeFactor/3, yBall*rnd2);
-		ctx.fillStyle = "#00eeee";
+		ctx.fillStyle = colorScheme;
 		ctx.fill();
 		ctx.stroke(); 
 		
@@ -269,34 +270,45 @@
 				theTime = 50;
 				lvlTime = 7;
 				txtLevel = 1;
+				colorScheme = "#0000ee";
+				canvas.style.backgroundColor = "#0000ee";
 				break;
 			case 3:
 				theTime = 45;
 				lvlTime = 5;
 				txtLevel = 2;
+				colorScheme = "#eeeeee";
+				canvas.style.backgroundColor = "#eeeeee";
 				break;	
 			case 4:
 				theTime = 40;
 				lvlTime = 4;
 				txtLevel = 3;
+				colorScheme = "#eeee00";
+				canvas.style.backgroundColor = "#eeee00";
 				break;	
 			case 5:
 				theTime = 35;
 				lvlTime = 4;
 				txtLevel = 3;
+				colorScheme = "#00ee00";
+				canvas.style.backgroundColor = "#00ee00";				
 				break;		
 			case 6:
 				theTime = 30;
 				lvlTime = 4;
 				txtLevel = 4;
+				colorScheme = "#ee00ee";
+				canvas.style.backgroundColor = "#ee00ee";
 				break;					
 			default:
 				theTime = 25;
 				lvlTime = 3;
 				txtLevel = 5;
+				colorScheme = "#ee0000";
+				canvas.style.backgroundColor = "#ee0000";
 				break;		
 		}
-		console.log(theLevel)
 	}
 	function theTimer(duration) { //in seconds
 		var counter = duration;
