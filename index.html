@@ -18,7 +18,6 @@
 	var yBall = 160;
 	var xBall = 70;
 	var yText = 1;
-	var txtLevel = 3;
 	var movPer = 0;
 	var initX, initY;
 	var curvX;
@@ -26,7 +25,13 @@
 	var lostShot = false;
 	var lostFactor = 0.0;
 	var theScore = 0;
+	var theTime = 60;
+	var lvlTime = 5;
+	var txtLevel = 0.7;
+	var theLevel = 1;
+	var countdown;
 	var randDir, yFactor;
+	var gameBegun = false;
 	
 	function init() {
 		window.requestAnimationFrame(draw);
@@ -119,6 +124,7 @@
 		ctx.globalCompositeOperation = 'destination-over';
 		ctx.clearRect(0, 0, 256, 192); // clear canvas
 		ctx.lineWidth = 0.5;
+		ctx.strokeStyle='#000000';
 		
 		for (var y=0;y<120;y=y+30) { // wall
 			for (var x=0;x<256;x=x+40) {
@@ -145,13 +151,27 @@
 		ctx.lineTo(256,120);
 		ctx.stroke();
 		
-		ctx.clearRect(200, 20, 50, 35);//scoreBoard
-		ctx.strokeRect(200, 20, 50, 35);
-		ctx.font = '16px serif';
-		ctx.globalCompositeOperation = 'source-over';
+
+		ctx.clearRect(200, 20, 50, 58);//scoreBoard
 		ctx.fillStyle="#000000";
-		ctx.fillText("score", 208, 30);
-		ctx.strokeText(theScore, 220, 50);
+		ctx.fillRect(198,18,55,63);
+		ctx.clearRect(200, 20, 50, 58);
+		ctx.strokeRect(200, 20, 50, 58);
+		ctx.textBaseline = "bottom";
+		ctx.globalCompositeOperation = 'source-over';
+		ctx.font = '10px serif';
+		ctx.fillStyle="#000000";
+		ctx.fillText("Level:", 202, 35);
+		ctx.font = '12px serif';
+		ctx.strokeText(theLevel, 232, 37);
+		ctx.font = '10px serif';
+		ctx.fillText("Time:", 202, 52);
+		ctx.font = '12px serif';
+		ctx.strokeText(theTime, 232, 54);
+		ctx.font = '10px serif';
+		ctx.fillText("Score:", 202, 69);
+		ctx.font = '12px serif';
+		ctx.strokeText(theScore, 232, 71);
 		
 		ctx.globalCompositeOperation = 'source-over'; // ball
 		ctx.beginPath();
@@ -210,6 +230,16 @@
 	function showResult(madeBasket) {
 		if (madeBasket) {
 			theScore++;
+			clearInterval(countdown);
+			if (theScore==10) {
+				theLevel++;
+				theScore=0;
+				checkLevel(theLevel);
+				theTimer(theTime);
+			}
+			else {
+				theTimer(theTime+lvlTime);
+			}
 		}
 		else {
 		
@@ -224,34 +254,107 @@
 		ballDown = true;
 		textDown = true;
 		yBall = 160;
-		xBall = 70;
+		xBall = randomNumber(30,200);
 		yText = 1;
-		txtLevel = 3;
 		movPer = 0;
+	}
+	function checkLevel(theLevel) {
+		switch (theLevel) {
+			case 1:
+				theTime = 60;
+				lvlTime = 10;
+				txtLevel = 1;
+				break;
+			case 2:
+				theTime = 50;
+				lvlTime = 7;
+				txtLevel = 1;
+				break;
+			case 3:
+				theTime = 45;
+				lvlTime = 5;
+				txtLevel = 2;
+				break;	
+			case 4:
+				theTime = 40;
+				lvlTime = 4;
+				txtLevel = 3;
+				break;	
+			case 5:
+				theTime = 35;
+				lvlTime = 4;
+				txtLevel = 3;
+				break;		
+			case 6:
+				theTime = 30;
+				lvlTime = 4;
+				txtLevel = 4;
+				break;					
+			default:
+				theTime = 25;
+				lvlTime = 3;
+				txtLevel = 5;
+				break;		
+		}
+		console.log(theLevel)
+	}
+	function theTimer(duration) { //in seconds
+		var counter = duration;
+		countdown = setInterval(function () {
+			counter--;
+			theTime = counter;
+			if (counter <= 0) { // time is up
+				clearInterval(countdown);
+				gameOver();
+			}
+		}, 1000);
+	}
+	function gameOver() {
+		alert("game over");
 	}
 	//
 	document.addEventListener("keypress", function onEvent(event) {
 		switch (event.key) {
-			case "o":
-				xBall=xBall-2;
-				break;
-			case "p":
-				xBall=xBall+2;
-				break;
 			case "Enter":
-				shoot = true;
+				if (gameBegun) {
+					shoot = true;
+				}
 				break;
+			case " ":
+				if (!gameBegun) {
+					gameBegun = true;
+					theTimer(theTime);
+					checkLevel(theLevel);
+					init();
+				}
+				
 		}
 	});
 	 document.addEventListener('keyup', (event) => {
 		const keyName = event.key;
 		if (keyName === "Enter") {
-			initX = xBall;
-			initY = yBall;
-			hasShot = true;
+			if (gameBegun) {
+				initX = xBall;
+				initY = yBall;
+				hasShot = true;
+			}
 		}
 	});
-	init();
+	
+	//boot screen
+	ctx.fillStyle = '#0000ee';
+	ctx.fillRect(0, 0, 256, 192); 
+	ctx.font = '40px serif';
+	ctx.strokeStyle='#eeee00';
+	ctx.strokeText("Casual Hoops", 15, 30);
+	ctx.font = '11px serif';
+	ctx.fillStyle='#ffffff';
+	ctx.fillText("Make as many shots as you can before time runs out.", 5, 60);
+	ctx.fillText("Keep 'Enter' pressed to aim, release to shoot.", 5, 80);
+	ctx.fillText("Made shots add time to the clock.", 5, 100);
+	ctx.fillText("Make 10 shots to advance to the next level.", 5, 120);
+	ctx.font = '12px serif';
+	ctx.fillText("Press Space Bar to Begin", 65, 170);
 
   </script>
 </html>
