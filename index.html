@@ -429,7 +429,9 @@
 		}, 1000);
 	}
 	function gameOver() {
-		alert("game over");
+		if (confirm("Game Over!\nPress OK for new game")) {
+			window.location.reload();
+		}
 	}
 	//
 	document.addEventListener("keypress", function onEvent(event) {
