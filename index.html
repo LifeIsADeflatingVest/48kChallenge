@@ -33,6 +33,7 @@
 	var randDir, yFactor;
 	var gameBegun = false;
 	var colorScheme = "#00eeee";
+	var rayLine = 0.0;
 	
 	function init() {
 		window.requestAnimationFrame(draw);
@@ -42,8 +43,8 @@
 		var rnd1 = rnd2 = 1;
 		if (shoot) {
 			if (!hasShot) {
-				rnd1 = randomNumber(0.97, 1.03);
-				rnd2 = randomNumber(0.97, 1.03);
+				rnd1 = randomNumber(0.98, 1.02);
+				rnd2 = randomNumber(0.98, 1.02);
 				if (textDown) {
 					yText=yText+txtLevel;
 					if (yText >= 70) {
@@ -127,15 +128,125 @@
 		ctx.lineWidth = 0.5;
 		ctx.strokeStyle='#000000';
 		
-		for (var y=0;y<120;y=y+30) { // wall
-			for (var x=0;x<256;x=x+40) {
-				ctx.strokeRect(x,y,40,15);
-			}
-		}
-		for (var y=15;y<120;y=y+30) {
-			for (var x=-20;x<256;x=x+40) {
-				ctx.strokeRect(x,y,40,15);
-			}
+		switch(theLevel) {
+			case 1:
+				for (var x=0;x<256;x=x+25) {
+					ctx.setLineDash([4, 16]);
+					ctx.moveTo(x, 0);
+					ctx.lineTo(x, 120);
+					ctx.stroke();
+				}
+				ctx.setLineDash([]);
+				break;
+			case 2:
+				ctx.fillStyle="#000000";
+				ctx.fillRect(25,45,40,70);
+				ctx.clearRect(23, 43, 38, 68);
+				ctx.strokeRect(23, 43, 38, 68);
+				ctx.font = '6px serif';
+				ctx.fillText("This is some text,", 24, 50, 35);
+				ctx.fillText("and some more here!", 24, 55, 35);
+				ctx.fillText("None is meant to be read.", 24, 60, 35);
+				ctx.font = '9px serif';
+				ctx.fillText("CAUTION", 24, 74, 35);
+				ctx.font = '6px serif';
+				ctx.fillText("This above however,", 24, 85, 35);
+				ctx.fillText("is indeed supposed to", 24, 90, 35);
+				ctx.fillText("be a readable sign.", 24, 95, 35);
+				break;
+			case 3:
+				for (var y=0;y<120;y=y+20) {
+					ctx.setLineDash([14, 4]);
+					ctx.moveTo(0, y);
+					ctx.lineTo(256, y);
+					ctx.stroke();
+					ctx.setLineDash([]);
+				}
+				break;
+			case 4:
+				ctx.fillStyle="#000000";
+				ctx.fillRect(40,50,40,70);
+				ctx.clearRect(43,52,34,68);
+				ctx.strokeRect(43,52,34,68);
+				ctx.lineWidth = 1;
+				ctx.beginPath();
+				ctx.arc(50, 90, 2, 0, 2 * Math.PI, false);
+				ctx.stroke();
+				break;
+			case 5:
+				ctx.lineWidth = 1;
+				ctx.strokeRect(100,0,55,120);
+				ctx.lineWidth = 0.5;
+				for (var x=150;x>101;x=x-4) {
+					ctx.setLineDash([4, 18]);
+					ctx.moveTo(x, 0);
+					ctx.lineTo(x, 120);
+					ctx.stroke();
+					ctx.setLineDash([]);
+				}
+				ctx.lineWidth = 0.7;
+				ctx.beginPath();
+				ctx.arc(40, 27, 20, 0, 2 * Math.PI, false);
+				ctx.moveTo(37, 22);
+				ctx.arc(32, 22, 6, 0, 2 * Math.PI, false);
+				ctx.moveTo(53, 22);
+				ctx.arc(48, 22, 6, 0, 2 * Math.PI, false);
+				ctx.stroke();
+				ctx.beginPath();
+				ctx.fillStyle="#000000";
+				ctx.arc(35, 24, 3, 0, 2 * Math.PI, false);
+				ctx.arc(52, 24, 3, 0, 2 * Math.PI, false);
+				ctx.fill();
+				ctx.beginPath();
+				ctx.lineWidth = rayLine;
+				ctx.moveTo(40,4);
+				ctx.lineTo(40,0);
+				ctx.moveTo(17,27);
+				ctx.lineTo(9,27);
+				ctx.moveTo(63,27);
+				ctx.lineTo(71,27);
+				ctx.moveTo(40,50);
+				ctx.lineTo(40,58);
+				rayLine = rayLine+0.025;
+				if (rayLine > 2) {
+					rayLine = 0;
+				}
+				ctx.stroke();
+				break;
+			case 6:
+				ctx.lineWidth = 1;
+				ctx.strokeRect(100,0,55,120);
+				ctx.lineWidth = 0.5;
+				for (var x=150;x>101;x=x-4) {
+					ctx.setLineDash([4, 18]);
+					ctx.moveTo(x, 0);
+					ctx.lineTo(x, 120);
+					ctx.stroke();
+					ctx.setLineDash([]);
+				}
+				ctx.lineWidth = 0.7;
+				ctx.fillStyle="#000000";
+				ctx.beginPath();
+				ctx.arc(40, 27, 20, 0, Math.PI * 2, true);
+				ctx.fill();    
+				ctx.globalCompositeOperation = 'destination-out';
+				ctx.beginPath();
+				ctx.arc(54, 18, 20, 0, Math.PI * 2, true);
+				ctx.fill();
+				ctx.globalCompositeOperation = 'destination-over';
+				break;
+			default:
+				for (var y=0;y<120;y=y+30) { // wall
+					for (var x=0;x<256;x=x+40) {
+						ctx.strokeRect(x,y,40,15);
+					}
+				}
+				for (var y=15;y<120;y=y+30) {
+					for (var x=-20;x<256;x=x+40) {
+						ctx.strokeRect(x,y,40,15);
+					}
+				}
+				break;
 		}
 		
 		ctx.clearRect(109, 13, 35, 35); // basket
@@ -242,11 +353,7 @@
 				theTimer(theTime+lvlTime);
 			}
 		}
-		else {
-		
-		}
-	
-		movePer = 0;
+
 		lostFactor = 0.0;
 		lostShot = false;
 		hasShot = false;
@@ -270,8 +377,8 @@
 				theTime = 50;
 				lvlTime = 7;
 				txtLevel = 1;
-				colorScheme = "#0000ee";
-				canvas.style.backgroundColor = "#0000ee";
+				colorScheme = "#ee00ee";
+				canvas.style.backgroundColor = "#ee00ee";
 				break;
 			case 3:
 				theTime = 45;
@@ -298,8 +405,8 @@
 				theTime = 30;
 				lvlTime = 4;
 				txtLevel = 4;
-				colorScheme = "#ee00ee";
-				canvas.style.backgroundColor = "#ee00ee";
+				colorScheme = "#0000ee";
+				canvas.style.backgroundColor = "#0000ee";
 				break;					
 			default:
 				theTime = 25;
